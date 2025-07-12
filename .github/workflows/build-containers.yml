@@ -23,7 +23,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - runnertags: ubuntu-latest
+          - runnertags: ubuntu-24.04-arm
             arch: arm64
           - runnertags: ubuntu-latest
             arch: amd64
@@ -35,7 +35,7 @@ jobs:
           fetch-depth: 0
 
       - name: Set up QEMU (For ARM64 Builds)
-        if: matrix.arch == 'arm64'
+        if: matrix.arch == 'arm64' && matrix.runnertags == 'ubuntu-latest'
         uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
