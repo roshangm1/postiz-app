@@ -9,6 +9,7 @@ import { DiscordDto } from '@gitroom/nestjs-libraries/dtos/posts/providers-setti
 import { SlackDto } from '@gitroom/nestjs-libraries/dtos/posts/providers-settings/slack.dto';
 import { InstagramDto } from '@gitroom/nestjs-libraries/dtos/posts/providers-settings/instagram.dto';
 import { LinkedinDto } from '@gitroom/nestjs-libraries/dtos/posts/providers-settings/linkedin.dto';
+import { FacebookDto } from '@gitroom/nestjs-libraries/dtos/posts/providers-settings/facebook.dto';
 import { IsIn } from 'class-validator';
 
 export type ProviderExtension<T extends string, M> = { __type: T } & M;
@@ -26,7 +27,7 @@ export type AllProvidersSettings =
   | ProviderExtension<'linkedin-page', LinkedinDto>
   | ProviderExtension<'instagram', InstagramDto>
   | ProviderExtension<'instagram-standalone', InstagramDto>
-  | ProviderExtension<'facebook', None>
+  | ProviderExtension<'facebook', FacebookDto>
   | ProviderExtension<'threads', None>
   | ProviderExtension<'mastodon', None>
   | ProviderExtension<'bluesky', None>
@@ -52,7 +53,7 @@ export const allProviders = (setEmpty?: any) => {
     { value: LinkedinDto, name: 'linkedin-page' },
     { value: InstagramDto, name: 'instagram' },
     { value: InstagramDto, name: 'instagram-standalone' },
-    { value: setEmpty, name: 'facebook' },
+    { value: FacebookDto, name: 'facebook' },
     { value: setEmpty, name: 'threads' },
     { value: setEmpty, name: 'mastodon' },
     { value: setEmpty, name: 'bluesky' },

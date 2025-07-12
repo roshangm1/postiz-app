@@ -316,10 +316,11 @@ export class FacebookProvider extends SocialAbstract implements SocialProvider {
       finalUrl = 'https://www.facebook.com/reel/' + videoId;
       finalId = videoId;
     } else {
+      const medias =  firstPost?.settings?.post_as_story ? [...firstPost.media, ...firstPost.media] : firstPost.media;
       const uploadPhotos = !firstPost?.media?.length
         ? []
         : await Promise.all(
-            firstPost.media.map(async (media) => {
+            medias.map(async (media) => {
               const { id: photoId } = await (
                 await this.fetch(
                   `https://graph.facebook.com/v20.0/${id}/photos?access_token=${accessToken}`,
@@ -340,7 +341,24 @@ export class FacebookProvider extends SocialAbstract implements SocialProvider {
               return { media_fbid: photoId };
             })
           );
-
+          if(firstPost?.settings?.post_as_story){
+            (await this.fetch(
+              `https://graph.facebook.com/v20.0/${id}/photo_stories?access_token=${accessToken}&fields=id`,
+              {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  photo_id: uploadPhotos?.[0]?.media_fbid,
+                  published: true,
+                }),
+              },
+              'finalize upload story'
+            )).json();
+          }
+      
+            
       const {
         id: postId,
         permalink_url,
@@ -354,7 +372,7 @@ export class FacebookProvider extends SocialAbstract implements SocialProvider {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              ...(uploadPhotos?.length ? { attached_media: uploadPhotos } : {}),
+              ...(uploadPhotos?.length ? { attached_media: !firstPost?.settings?.post_as_story ? uploadPhotos : uploadPhotos.filter((_, index) => index !== 0) } : {}),
               ...(firstPost?.settings?.url
                 ? { link: firstPost.settings.url }
                 : {}),
@@ -366,9 +384,14 @@ export class FacebookProvider extends SocialAbstract implements SocialProvider {
         )
       ).json();
 
-      finalUrl = permalink_url;
-      finalId = postId;
-    }
+     
+
+    finalUrl = permalink_url;
+    finalId = postId;
+  }
+    
+
+
 
     const postsArray = [];
     let commentId = finalId;
