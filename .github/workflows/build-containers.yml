@@ -24,10 +24,9 @@ jobs:
       matrix:
         include:
           - runnertags: ubuntu-latest
-            arch: amd64
-          - runnertags: ubuntu-latest
             arch: arm64
-
+          - runnertags: ubuntu-latest
+            arch: amd64
     runs-on: ${{ matrix.runnertags }}
     steps:
       - name: Checkout
