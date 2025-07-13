@@ -688,6 +688,7 @@ export class PostsRepository {
         publishDate: true,
         releaseURL: true,
         state: true,
+        image: true,
         integration: {
           select: {
             id: true,
