@@ -162,6 +162,7 @@ export class PostsRepository {
         state: true,
         intervalInDays: true,
         group: true,
+        image: true,
         tags: {
           select: {
             tag: true,
